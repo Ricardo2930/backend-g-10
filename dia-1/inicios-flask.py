@@ -1,7 +1,12 @@
 from flask import Flask, request
-#si el archivo es eñ archivo principal del proyecto su valor de la variable __name__ sera '__main__' caso contrario sera none (vacio)
+from flask_cors import CORS
+#si el archivo es el archivo principal del proyecto su valor de la variable __name__ sera '__main__' caso contrario sera none (vacio)
 app = Flask (__name__)
 #una sola instancia de clase 
+
+#ahora configuramos nuestros CORS (Control de Acceso de Recursos Cruzados)
+CORS(app=app, origins=['http://127.0.0.1:5500'], methods=['GET','POST'])
+
 #patron de diseño de software (singleton) 
 
 #creamos la variable USUARIOS =[]
