@@ -1,5 +1,5 @@
 from flask import Flask, request
-from flask_cors import CORS
+from flask_cors import CORS 
 #si el archivo es el archivo principal del proyecto su valor de la variable __name__ sera '__main__' caso contrario sera none (vacio)
 app = Flask (__name__)
 #una sola instancia de clase 
