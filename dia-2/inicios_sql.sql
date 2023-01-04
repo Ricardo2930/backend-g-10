@@ -4,7 +4,7 @@ CREATE DATABASE IF NOT EXISTS practicas;
 USE practicas;
 -- ahora procedemos a crear nuestra primera tabla
 -- tipos de datos:
--- AUTO_INCREMENT > Solamente puede haber un por tabla
+-- AUTO_INCREMENT >> Solamente puede haber uno por tabla
 
 CREATE TABLE usuarios (
 -- nombre  datatype (config. adicionales)
