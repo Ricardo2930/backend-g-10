@@ -125,31 +125,35 @@ FROM almacenes AS a INNER JOIN almacen_producto AS ap ON a.id = ap.almacen_id
 -- De la tabla Productos NOMBRE, PRECIO
 -- De la tabla Almacenes NOMBRE DIRECCION
 
+-- RELACIONADO PRODUCTOS CON CATEGORIAS, PRODUCTOS CON AP, Y AP CON ALMACENES
 SELECT c.nombre AS 'Categoria nombre',
 	   p.nombre AS 'Producto nombre',
        p.precio AS 'Precio Producto',
        a.nombre AS 'Nombre Almacen',
        a.direccion AS 'Direccion Almacen'
        FROM productos AS p INNER JOIN categorias AS c ON p.categoria_id = c.id
-						   INNER JOIN almacen_producto AS ap ON ap.id = c.id
-                           INNER JOIN almacenes AS a ON a.id = ap.almacen_id;
-                           
+						   INNER JOIN almacen_producto AS ap ON p.id = ap.producto_id
+                           INNER JOIN almacenes AS a ON ap.almacen_id = a.id;
+   
+-- RELACIONADO CATEGORIAS CON PRODUCTOS, PRODUCTOS CON AP, Y AP CON ALMACENES   
 SELECT c.nombre, p.nombre, p.precio, a.nombre, a.direccion
  FROM categorias as c 	
 		INNER JOIN productos AS p ON c.id = p.categoria_id
 		INNER JOIN almacen_producto AS ap ON p.id = ap.producto_id
         INNER JOIN almacenes AS a ON ap.almacen_id = a.id;
-        
+ 
+ -- RELACIONADO PRODUCTOS CON CATEGORIAS, PRODUCTOS CON AP, Y AP CON ALMACENES
 SELECT *
        FROM productos AS p INNER JOIN categorias AS c ON p.categoria_id = c.id
-						   INNER JOIN almacen_producto AS ap ON c.id = ap.id
+						   INNER JOIN almacen_producto AS ap ON p.id = ap.producto_id
                            INNER JOIN almacenes AS a ON ap.almacen_id = a.id;
                            
+-- RELACIONADO CATEGORIAS CON PRODUCTOS, PRODUCTOS CON AP, Y AP CON ALMACENES                           
 SELECT *
 		FROM categorias as c 	
 			INNER JOIN productos AS p ON c.id = p.categoria_id
 			INNER JOIN almacen_producto AS ap ON p.id = ap.producto_id
 			INNER JOIN almacenes AS a ON ap.almacen_id = a.id;
             
-select * from almacen_producto;
+
                            
