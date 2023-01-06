@@ -3,6 +3,9 @@ from flask_mysqldb import MySQL
 #Devuelve todas las variables de entorno del dispositivo
 from os import environ
 
+from dotenv import load_dotenv
+load_dotenv()
+
 app = Flask (__name__)
 #Toda esta configuracion es para conectarme a mi base de datos
 #Cuando tenemos un diccionario podemos OBTENER el valor de una de las llaves con el metodo .get('LLAVE'), SOLO es para obtener, no es para asignar. Y si que al obtener no hay valor entonces colocara None (vacio)
