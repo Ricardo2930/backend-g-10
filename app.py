@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 
 from models.categorias_model import Categoria
 from models.productos_model import Producto
+from models.categorias_productos_model import CategoriaProducto
 
 # aca utilizaremos el archivo .env para agregarlo a las variables de entorno
 load_dotenv()
