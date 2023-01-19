@@ -11,3 +11,10 @@ class ProductosModel(db.Model):
     def __init__(self, nombre, precio):
         self.nombre = nombre
         self.precio = precio
+
+    def json(self):
+        return {
+            'id':self.id,
+            'nombre':self.nombre,
+            'precio':self.precio
+        }

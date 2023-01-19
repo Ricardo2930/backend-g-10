@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from controllers.productos_controll import ProductosController
 from flask_migrate import Migrate
 from db import db
@@ -15,17 +15,17 @@ migrate = Migrate(app,db)
 def index ():
     return "Mi aplicacion con Flask :D"
 
-@app.route("/productos",methods = ['GET'])
+@app.route("/productos",methods = ['GET']) # ruta para listar productos
 def productos ():
     #return "Ruta productos"
     #CONTROLLER
     controller = ProductosController()
     return controller.listarProductos()
 
-@app.route("/productos/crear", methods=['GET'])
+@app.route("/productos/crear", methods=['POST']) # ruta para crear productos
 def productosCrear():
     controller = ProductosController()
-    return controller.create()
+    return controller.create(request.json)
 
 if __name__ == '__main__':
     app.run (debug=True) # Para que corra la app
