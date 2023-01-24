@@ -16,9 +16,9 @@ def categoriasActualizar(categoria_id):
 
 
 @app.route("/categorias/eliminar/<int:categoria_id>", methods=['DELETE'])
-def categoriasEliminar(categoria_id):
+def categoriasEliminar(categoria_id): #recibimos en la funcion
     controller = CategoriasController()
-    return controller.eliminarCategoria(categoria_id)
+    return controller.eliminarCategoria(categoria_id) #lo enviamos al metodo
 
 
 @app.route("/categorias/listar", methods=['GET'])
