@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean
 from db import db
 
 class CategoriasModel(db.Model):
-    __tablename__ = 'Categorias'
+    __tablename__ = 'categorias'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     nombre = Column(String(45), nullable=False)

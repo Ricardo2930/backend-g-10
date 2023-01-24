@@ -1,12 +1,20 @@
 from models.productos_model import ProductosModel
+from models.categorias_productos_model import CategoriasProductosModel
 from db import db
 
 class ProductosController:
 
     def crearProducto(self, data):
         try:
-            producto = ProductosModel(data['nombre'], data['precio'])
+            producto = ProductosModel(data['nombre'], data['precio']) #data['imagen'])
             db.session.add(producto)
+            db.session.commit()
+
+            nuevas_categorias = []
+            for categoria in data['categorias']:
+                nueva_categoria = CategoriasProductosModel(producto.id, categoria['categoria_id'])
+                nuevas_categorias.append(nueva_categoria)
+            db.session.add_all(nuevas_categorias)
             db.session.commit()
             return {
                 'data': producto.convertirJson()
@@ -31,7 +39,6 @@ class ProductosController:
         try:
             producto = ProductosModel.query.filter_by(id=producto_id).first()
             producto.estado = False
-            # db.session.delete(producto)
             db.session.commit()
             return {
                 'message': 'Producto eliminado correctamente'
