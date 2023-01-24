@@ -18,5 +18,5 @@ def index ():
 
 import routers
 
-if __name__ == '__main__':
-   app.run (debug=True) # Para que corra la app
+#if __name__ == '__main__':
+#   app.run (debug=True) # Para que corra la app

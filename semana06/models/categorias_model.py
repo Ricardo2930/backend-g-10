@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 from db import db
 
 class CategoriasModel(db.Model):
@@ -6,6 +6,7 @@ class CategoriasModel(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     nombre = Column(String(45), nullable=False)
+    estado = Column(Boolean, default=True)
 
     def __init__(self, nombre) -> None:
         self.nombre = nombre
@@ -14,4 +15,5 @@ class CategoriasModel(db.Model):
         return {
             'id': self.id,
             'nombre': self.nombre,
+            'estado': self.estado
         }

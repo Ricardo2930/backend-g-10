@@ -37,5 +37,19 @@ class CategoriasController:
                 'error': str(e)
             }, 500
 
+    def eliminarCategoria(self, categoria_id):
+        try:
+            categoria = self.model.query.get(categoria_id)
+            categoria.estado = False
+            db.session.commit()
+            return {
+                'data': categoria.convertirJson()
+            }
+        except Exception as e:
+            db.session.rollback()
+            return {
+                'message': 'Internal server error',
+                'error': str(e)
+            }, 500
     
         
