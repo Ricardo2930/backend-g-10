@@ -6,7 +6,7 @@ class ProductosController:
 
     def crearProducto(self, data):
         try:
-            producto = ProductosModel(data['nombre'], data['precio']) #data['imagen'])
+            producto = ProductosModel(data['nombre'], data['precio'],data['imagen'])
             db.session.add(producto)
             db.session.commit()
 
