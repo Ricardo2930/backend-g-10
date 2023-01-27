@@ -41,7 +41,7 @@ python manage.py startapp almacen
 settings.py
     INSTALLED_APPS = [
         ... ,
-        'almacen
+        'almacen'
     ]
 ```
 
