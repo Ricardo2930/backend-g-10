@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import ProductosModel, CategoriasModel
-from .serializers import ProductosSerializer
-from rest_framework import generics
+from .serializers import ProductosSerializer, CategoriasSerializer
+from rest_framework import generics, status
 from rest_framework.response import Response
 
 def renderHtml(request):
@@ -18,34 +18,74 @@ class ProductosView(generics.ListCreateAPIView):
     #con el objetcs hacemos referencia a todas las categorias (objetcs) para traerlos
 
 # Por cada modelo, serializers creamos se crea una vista
-class CategoriasView(generics.GenericAPIView): #los generics se trabajan con clases
-    queryset = CategoriasModel.objects.all() #este metodo extrae todos los datos
-    serializer_class = ProductosSerializer
+class CategoriasView(generics.GenericAPIView):
+    serializer_class = CategoriasSerializer
+    queryset = CategoriasModel.objects.all()
 
-    # Empezamos a definir los metodos GET, POST, ...
-    def get(self,request):
+    def get(self, request):
         try:
             record = self.get_queryset()
-            #print(record)
-            serializer = self.get_serializer(record, many = True) # se le pasa la propiedad MANY para indicarle que es una lista. Y los modelos los pasa serializados
-            return Response (serializer.data)
+            serializer = self.get_serializer(record, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response ({
-                'message' : 'Internal server error',
-                'error' : str(e)
-            })
+            return Response(
+                data = {
+                    'message': 'Internal server error',
+                    'error': str(e)
+                }, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
     def post(self, request):
         try:
             categoria = self.get_serializer(data=request.data)
             if categoria.is_valid():
                 categoria.save()
-                print(categoria.data)
-                return Response(categoria.data)
+                return Response(categoria.data, status=status.HTTP_201_CREATED)
+
+            error = 'Faltan campos'
+            for campo in categoria.errors:
+                error = error + ' ' + campo + ', '
             return Response({
-                
+                'message': error
             })
-        except:
+        except Exception as e:
             return Response({
-                'message': 'Internal server error'
+                'message': 'Internal server error',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class ActualizarCategoriasView(generics.GenericAPIView):
+    queryset = CategoriasModel.objects.all()
+    serializer_class = CategoriasSerializer
+
+    def get (self, request, categoria_id):
+        try:
+            record = self.get_queryset().get(id=categoria_id)
+            serializer = self.get_serializer(record)
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response ({
+                'message' : 'internal server error',
+                'error' : str(e)
+            },status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def put(self, request, categoria_id):
+        try:
+            categoria = self.get_queryset().get(id=categoria_id)
+            serializer = self.get_serializer(categoria, data = request.data)
+            if serializer.is_valid():
+                categoria_actualizada = serializer.update(categoria,serializer.validated_data)
+                nuevo_serializador = self.get_serializer(categoria_actualizada)
+                return Response(nuevo_serializador.data, status=status.HTTP_201_CREATED)
+            error = 'Faltan campos'
+            for campo in categoria.errors:
+                error = error + ' ' + campo + ','
+            return Response ({
+                'message' : error
             })
+        except Exception as e:
+            return Response({
+                'message': 'Internal server error',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
