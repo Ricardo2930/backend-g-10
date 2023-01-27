@@ -89,3 +89,17 @@ class ActualizarCategoriasView(generics.GenericAPIView):
                 'message': 'Internal server error',
                 'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def delete(self, request, categoria_id):
+        try:
+            categoria = self. get_queryset().get(id=categoria_id)
+            serializador = self.get_serializer(categoria)
+            serializador.delete()
+            return Response({
+                'message' : 'Categoria eliminada correctamente'
+            },status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response ({
+                'message' : 'Internal server error',
+                'error' : str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
