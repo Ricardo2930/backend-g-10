@@ -19,11 +19,33 @@ class ProductosView(generics.ListCreateAPIView):
 
 # Por cada modelo, serializers creamos se crea una vista
 class CategoriasView(generics.GenericAPIView): #los generics se trabajan con clases
-    queryset = CategoriasModel.objects.all()
+    queryset = CategoriasModel.objects.all() #este metodo extrae todos los datos
     serializer_class = ProductosSerializer
 
+    # Empezamos a definir los metodos GET, POST, ...
     def get(self,request):
-        record = self.get_queryset()
-        #print(record)
-        serializer = self.get_serializer(record, many = True)
-        return Response (serializer.data)
+        try:
+            record = self.get_queryset()
+            #print(record)
+            serializer = self.get_serializer(record, many = True) # se le pasa la propiedad MANY para indicarle que es una lista. Y los modelos los pasa serializados
+            return Response (serializer.data)
+        except Exception as e:
+            return Response ({
+                'message' : 'Internal server error',
+                'error' : str(e)
+            })
+
+    def post(self, request):
+        try:
+            categoria = self.get_serializer(data=request.data)
+            if categoria.is_valid():
+                categoria.save()
+                print(categoria.data)
+                return Response(categoria.data)
+            return Response({
+                
+            })
+        except:
+            return Response({
+                'message': 'Internal server error'
+            })
