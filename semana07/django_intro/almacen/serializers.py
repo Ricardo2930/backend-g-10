@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ProductosModel, CategoriasModel
+from .models import ProductosModel, CategoriasModel, ClientesModel,OrdenesModel
 
 # serializador darle formato a los datos a devolver, y controla los campos que se van a enviar (POST)
 class ProductosSerializer(serializers.ModelSerializer): # () Ahi dentro se hereda la clase 
@@ -19,3 +19,23 @@ class CategoriasSerializer (serializers.ModelSerializer):
     def delete(self):
         self.instance.estado = False
         self.instance.save()
+
+class ClientesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClientesModel
+        fields = '__all__'
+
+class OrdenesSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = OrdenesModel
+        fields = '__all__'
+
+# class DetallesOrdenSerializer (serializers.ModelSerializer):
+#     class Meta:
+#         model = DetallesOrdenModel
+#         fields = '__all__'
+
+# class PagosSerializer (serializers.ModelSerializer):
+#     class Meta:
+#         model = OrdenesModel
+#         fields = '__all__'
