@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import ProductosModel, CategoriasModel, ClientesModel, OrdenesModel
-from .serializers import ProductosSerializer, CategoriasSerializer, ClientesSerializer, OrdenesSerializer
+from django.contrib.auth.models import User
+from .serializers import ProductosSerializer, CategoriasSerializer, ClientesSerializer, OrdenesSerializer, DetallesOrdenModel
 from rest_framework import generics, status
 from rest_framework.response import Response
+from pprint import pprint
+
 
 def renderHtml(request):
     return HttpResponse("<button>Dame click</button>") # podemos devolver pero creando rutas urlpatterns
@@ -104,18 +107,47 @@ class ActualizarCategoriasView(generics.GenericAPIView):
                 'error' : str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class OrdensView(generics.GenericAPIView):
+class OrdenesView(generics.GenericAPIView):
     queryset = OrdenesModel.objects.all()
     serializer_class = OrdenesSerializer
 
     def post(self, request):
         try:
-            print(request.data)
-            return Response ({
-                'message' : 'operacion exitosa'
-            }, status=status.HTTP_201_CREATED)
+            orden = self.get_serializer(data=request.data)
+            if orden.is_valid():
+                cliente = ClientesModel(**request.data['cliente'])
+                cliente.save()
+
+                usuario = User.objects.get(id=request.data['usuario_id'])
+                orden_dict = {
+                    'codigo': request.data['codigo'],
+                    'observacion': request.data['observacion'],
+                    'cliente_id': cliente,
+                    'usuario_id': usuario
+                }
+                orden = OrdenesModel(**orden_dict)
+                orden.save()
+
+                for detalle in request.data['detalle']:
+                    producto = ProductosModel.objects.get(id=detalle['producto_id'])
+                    detalle_dict = {
+                        'cantidad': detalle['cantidad'],
+                        'producto_id': producto,
+                        'orden_id': orden
+                    }
+                    detalle = DetallesOrdenModel(**detalle_dict)
+                    detalle.save()
+                return Response({
+                    'message': 'Operacion exitosa'
+                }, status=status.HTTP_201_CREATED)
+            error = 'Faltan campos'
+            for campo in orden.errors:
+                error = error + ' ' + campo + ', '
+            return Response({
+                'message': error
+            }, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response ({
-                'message' : 'Internal server error',
-                'error' : str(e)
+            return Response({
+                'message': 'Internal server error',
+                'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
