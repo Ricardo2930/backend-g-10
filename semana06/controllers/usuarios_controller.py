@@ -1,4 +1,5 @@
 from models.usuarios_model import UsuariosModel
+from werkzeug.security import generate_password_hash, check_password_hash
 from db import db
 
 class UsuariosController:
@@ -8,11 +9,13 @@ class UsuariosController:
     def crearUsuario(self, data):
         try:
             contraseña = self.__encriptarContraseña (data ['contraseña'])
-            usuario = UsuariosModel(data['nombres'], data['correo'], data ['imagen'], contraseña)
+            #print(contraseña)
+            usuario = self.model(data['nombres'], data['correo'], data ['imagen'], contraseña)
             db.session.add(usuario)
             db.session.commit()
             return {
                 'data' : usuario.convertirJson()
+                #'data' : 'Contraseña Encriptada'
             }    
         
         except Exception as e:
@@ -22,5 +25,4 @@ class UsuariosController:
             },500
 
     def __encriptarContraseña (self, contraseña):
-        contraseña_encriptada = ""
-        return contraseña_encriptada
+        return generate_password_hash (contraseña)

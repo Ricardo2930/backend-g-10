@@ -5,7 +5,7 @@ class UsuariosModel (db.Model):
     __tablename__ = "usuarios"
 
     id = Column (Integer, primary_key = True, autoincrement = True)
-    nombres = Column ( String(200), mullable = False)
+    nombres = Column ( String(200), nullable = False)
     correo = Column (String(100), nullable = False)
     imagen = Column (Text, nullable = True)
     contaseña = Column (Text, nullable =False)
@@ -20,5 +20,6 @@ class UsuariosModel (db.Model):
         return {
             'id' : self.id,
             'nombres' : self.nombres,
+            'correo' : self.correo,
             'imagen' : self.imagen,
         }
