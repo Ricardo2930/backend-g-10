@@ -1,7 +1,7 @@
 from models.usuarios_model import UsuariosModel
 from werkzeug.security import generate_password_hash, check_password_hash
 from db import db
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, create_refresh_token
 
 class UsuariosController:
     def __init__(self) -> None:
@@ -27,7 +27,6 @@ class UsuariosController:
 
     def iniciarSesion(self, data):
         try:
-            
             usuario = self.model.query.filter_by(correo=data['correo']).first() #vamos a buscar al usuario (filtrar)
             print(usuario)
             if not usuario: #para validar el correo y contraseña que existan y sean las correctas
@@ -42,9 +41,14 @@ class UsuariosController:
             access_token = create_access_token (identity = {
                 'id':usuario.id,
                 'correo':usuario.correo
-            }) # aca definimos -- > user_id = get_jwt_identity()
+            }) # aca definimos -- > user_id = get_jwt_identity() en categorias_router, en ruta protegida
+            refresh_token = create_refresh_token(identity = {
+                'id':usuario.id,
+                'correo':usuario.correo
+            })
             return {
-                'access_token': access_token
+                'access_token': access_token,
+                'refresh_token': refresh_token
             } 
 
         except Exception as e:
@@ -52,6 +56,23 @@ class UsuariosController:
                 'message': 'Internal server error',
                 'error': str(e)
             }, 500
+    
+    def refreshSesion (self, identity):
+        try:
+            if not identity:
+                return {
+                    'message' : 'Unauthorized'
+                },401
+            access_token = create_access_token (identity = identity)
+            return {
+                'access_token' : access_token
+            },200
+
+        except Exception as e:
+           return {
+                'message': 'Internal server error',
+                'error': str(e)
+            },500
     
     # def __comprobarContraseña(self, contraseña, contra_hash):#contraseña hasheada, traiada desde la BD (POSTMAN)
     #     return check_password_hash(contraseña, contra_hash)
