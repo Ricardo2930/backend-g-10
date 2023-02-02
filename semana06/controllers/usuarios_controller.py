@@ -24,5 +24,27 @@ class UsuariosController:
                 'error' :str(e)
             },500
 
+    def iniciarSesion(self, data):
+        try:
+            
+            usuario = self.model.query.filter_by(correo=data['correo']).first() #vamos a buscar al usuario (filtrar)
+            print(usuario)
+            if not usuario: #para validar el correo y contraseña que existan y sean las correctas
+                return {
+                    'message' : 'Unauthorized'
+                },401
+            print (self.__comprobarContraseña(data['contraseña'], usuario.contraseña))
+            return {
+                'access_token':'Esta es una token'
+            }
+        except Exception as e:
+            return {
+                'message': 'Internal server error',
+                'error': str(e)
+            }, 500
+    
+    def __comprobarContraseña(self, contraseña, contra_hash):#contraseña hasheada, traiada desde la BD
+        return check_password_hash(contraseña, contra_hash)
+
     def __encriptarContraseña (self, contraseña):
         return generate_password_hash (contraseña)

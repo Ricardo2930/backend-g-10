@@ -8,13 +8,16 @@ class UsuariosModel (db.Model):
     nombres = Column ( String(200), nullable = False)
     correo = Column (String(100), nullable = False)
     imagen = Column (Text, nullable = True)
-    contaseña = Column (Text, nullable =False)
+    contraseña = Column (Text, nullable =False)
 
     def __init__(self, nombres, correo, imagen, contraseña) -> None:
         self.nombres = nombres
         self. correo = correo
         self. imagen = imagen
-        self. contaseña = contraseña
+        self. contraseña = contraseña
+
+    def __str__(self) -> str: #metodo magico para no retorne UsuarioModel1 sino el nombre asignado
+        return self.nombres
 
     def convertirJson (self):
         return {
