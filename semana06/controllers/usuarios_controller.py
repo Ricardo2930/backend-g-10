@@ -9,7 +9,7 @@ class UsuariosController:
     def crearUsuario(self, data):
         try:
             contraseña = self.__encriptarContraseña (data ['contraseña'])
-            #print(contraseña)
+            #print(contraseña) -> self.model = UsuariosModel
             usuario = self.model(data['nombres'], data['correo'], data ['imagen'], contraseña)
             db.session.add(usuario)
             db.session.commit()

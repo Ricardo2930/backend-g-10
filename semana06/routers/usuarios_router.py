@@ -5,4 +5,4 @@ from flask import request
 @app.route ("/auth/register", methods = ['POST'])
 def usuariosRegister():
     controller = UsuariosController()
-    return controller.crearUsuario (request.json)
+    return controller.crearUsuario(request.json) # request.json = data
