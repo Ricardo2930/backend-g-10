@@ -1,6 +1,7 @@
 from models.usuarios_model import UsuariosModel
 from werkzeug.security import generate_password_hash, check_password_hash
 from db import db
+from flask_jwt_extended import create_access_token
 
 class UsuariosController:
     def __init__(self) -> None:
@@ -33,18 +34,27 @@ class UsuariosController:
                 return {
                     'message' : 'Unauthorized'
                 },401
-            print (self.__comprobarContraseña(data['contraseña'], usuario.contraseña))
+
+            if not check_password_hash(usuario.contraseña, data['contraseña']):
+                return {
+                    'message' : 'Unauthorized'
+                },401
+            access_token = create_access_token (identity = {
+                'id':usuario.id,
+                'correo':usuario.correo
+            })
             return {
-                'access_token':'Esta es una token'
-            }
+                'access_token': access_token
+            } 
+
         except Exception as e:
             return {
                 'message': 'Internal server error',
                 'error': str(e)
             }, 500
     
-    def __comprobarContraseña(self, contraseña, contra_hash):#contraseña hasheada, traiada desde la BD
-        return check_password_hash(contraseña, contra_hash)
+    # def __comprobarContraseña(self, contraseña, contra_hash):#contraseña hasheada, traiada desde la BD (POSTMAN)
+    #     return check_password_hash(contraseña, contra_hash)
 
     def __encriptarContraseña (self, contraseña):
         return generate_password_hash (contraseña)
