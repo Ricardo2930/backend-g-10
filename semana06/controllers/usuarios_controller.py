@@ -42,7 +42,7 @@ class UsuariosController:
             access_token = create_access_token (identity = {
                 'id':usuario.id,
                 'correo':usuario.correo
-            })
+            }) # aca definimos -- > user_id = get_jwt_identity()
             return {
                 'access_token': access_token
             } 
