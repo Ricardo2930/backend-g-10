@@ -26,6 +26,6 @@ def categoriasEliminar(categoria_id): #recibimos en la funcion
 @jwt_required()
 def categoriasListar():
     user_id = get_jwt_identity()
-    print(user_id)
+    #print(user_id)
     controller = CategoriasController()
-    return controller.listarCategorias()
+    return controller.listarCategorias(user_id)

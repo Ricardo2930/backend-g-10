@@ -21,13 +21,19 @@ class CategoriasController:
                 'error': str(e)
             }, 500
 
-    def listarCategorias(self):
+    def listarCategorias(self, id):
         try:
+            print(id)
             categorias = self.model.query.all()
             #categorias = self.model.query.filter_by(estado=True).all()
             response = []
             for categoria in categorias:
-                response.append(categoria.convertirJson())
+                response.append(categoria.convertirJson()) #Es lo mismo que las 3 líneas de abajo
+            # response = [
+            #     categoria.convertirJson()
+            #     for categoria in categorias
+            # ]
+                
             return {
                 'data': response
             }, 200
