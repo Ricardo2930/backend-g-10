@@ -29,3 +29,9 @@ def categoriasListar():
     #print(user_id)
     controller = CategoriasController()
     return controller.listarCategorias(user_id)
+
+@app.route("/categorias/importarxlsx", methods=['GET'])
+def categoriasImportar():
+    controller = CategoriasController()
+    return controller.importarExcel()
+
