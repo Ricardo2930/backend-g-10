@@ -37,3 +37,6 @@ class PlatoModel(models.Model):
     # DO_NOTHING > permite la eliminacion PERO no hace nada osea mantiene el mismo numero de categoria en el plato a pesar que este no exista generando un problema de integridad 
 
     categoria = models.ForeignKey (to=CategoriaModel, on_delete=models.PROTECT,db_column='categoria_id')
+
+    class Meta:
+        db_table = 'platos'
