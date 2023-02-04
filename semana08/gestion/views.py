@@ -35,6 +35,34 @@ class PlatoApiView (ListCreateAPIView):
         #SELECT*FROM platos WHERE disponibilidad = True
         resultado = PlatoModel.objects.filter(disponibilidad=True).all()
         print(resultado)
+        # Aca llamamos a serializer y le pasamos la informacion proveniente de la BD y con el parametro many=True indicamos que le estamos pasando un arreglo de instancias
+        serializador = PlatoSerializer(instance = resultado, many=True)
+        print (serializador.data)
         return Response (data = {
-            'message':'Me hizo get'
+            'message':serializador.data
+        })
+
+    def post (self, request:Request):
+        body = request.data #Me devuelve la info del BODY
+        # Cuando queremos verificar si la informacion entrante es valida entonces utilizamos el parametro DATA en vez del paramentro instance
+        serializador = PlatoSerializer(data = body) # (parametro del serial = data que es iguak a request.data)
+        # Es el encargado de validar si la data es correcta y cumple con todos los requisitos
+        #Instanciar, tomo toda la configuracion o copia de una clase y la uso en la variable guardada 
+        valida = serializador.is_valid()
+
+        if valida == False:
+            return Response (data = {
+                'message':'La informacion es invalida',
+                #error > Mostrar los errores SOLAMENTE cuando la data es invalida
+                'content':serializador.errors # Argumento (atributo) de la clase definidos 
+            })
+        
+        # Asi guardamos la informacion en la base de datos utilizando el serializador save()
+        nuevoPlato = serializador.save() #save() es un metodo de serializador
+        print(nuevoPlato)
+        serializar = PlatoSerializer (instance=nuevoPlato) #instance es el parametro
+        return Response (data = {
+            'message':'Plato creado exitosamente',
+            #method data > Es la informacion convertida a un diccionario para que pueda ser entendida por el cliente
+            'content':serializar.data
         })
