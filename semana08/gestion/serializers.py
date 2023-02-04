@@ -18,3 +18,13 @@ class PlatoSerializer (serializers.ModelSerializer):
     class Meta:
         model = PlatoModel
         exclude = ['disponibilidad'] #excluimos el atributo disponibilidad
+         # Este atributo sirve para poder conectarnos a las relaciones adyacentes a este modelo, que tan profundidad quieres ingresar, sube un nivel si es 1 y asi sucesivamente.
+        #Sirve solamente para tablas en las cuales tengamos una llave foranea, es decir que esta tabla dependa de otra.
+        # Sirve para decirle que desde el plato nos podamos mover un nivel hacia arriba y devolver lo que vendria a ser la categoria.
+        depth = 1
+
+class CategoriaConPlatosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CategoriaModel
+        fields = '__all__'
+       
