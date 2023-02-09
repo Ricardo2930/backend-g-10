@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
+from .auth_manager import UsuarioManager
 
 # Create your models here.
 class CategoriaModel(models.Model):
@@ -41,3 +43,38 @@ class PlatoModel(models.Model):
 
     class Meta:
         db_table = 'platos'
+
+# Como vamos a modificar el comportamiento de la tabla auth_user de Django entonces tenemos que modificar su herencia
+class UsuarioModel(AbstractBaseUser):
+    # https://docs.djangoproject.com/en/4.1/topics/auth/customizing/
+    #AbstractBaseUser -> Me permite modificar todo lo que yo quiera del modelo auth_user mientras que el AbstracUser solo me permite agregar nuevas columnas
+
+    id = models.AutoField(primary_key=True, unique=True)
+    nombre = models.CharField(max_length=50,null=False)
+    apellido = models.CharField(max_length=50,null=False)
+    # Django hace una validacion para que el correo cumpla con el formato válido xxxx@gmai.com
+    correo = models.EmailField(max_length=100, unique=True, null=False)
+    password = models.TextField(null=False)
+    # CHOICES -> (Opciones), porque el primero es con el que se guardara en la base de datos, y el segundo es con que se mostrara al momento de devolver la informacion
+    tipoUsuario = models.CharField(max_length=40, choices=[('ADMIN', 'ADMINISTRADOR') , ('MOZO','MOZO')])
+    #enum -> o eres usuario o administrador
+    #Propiedades Netas para el Panel Administrativo
+        # Sirve para indicar si el usuario que quiere acceder pertenece o no al equipi de trabajo
+    is_staff = models.BooleanField(default=False)
+
+        # Sirve para indicar si el usuario es un usuario activo de la empresa
+    is_active = models.BooleanField(default=True)
+
+        # Sirve para indicar la fecha en la que se creo el usuario
+    createdAt = models.DateTimeField(auto_now_add=True, db_column='created_at') 
+
+    # Propio del modelauth_user
+    #Par el panel administrativo para indicar cual es el atributo que debe pedir como nombre de usuario
+    USERNAME_FIELD='correo'
+
+     # son las columnas o los atributos requeridos al momento de crear el superusuario por consola, no se coloca el username_field ni tampoco la contraseña porque ya son implicitos
+    REQUIRED_FIELDS = ['nombre', 'apellido', 'tipoUsuario']
+
+    objects = UsuarioManager()
+    class Meta:
+        db_table = 'usuarios'
