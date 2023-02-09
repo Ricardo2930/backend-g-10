@@ -36,7 +36,8 @@ class PlatoModel(models.Model):
     # SET_DEFAULT > permite la eliminacion de la categoria y les cambiar el valor a un valor por defecto
     # DO_NOTHING > permite la eliminacion PERO no hace nada osea mantiene el mismo numero de categoria en el plato a pesar que este no exista generando un problema de integridad 
 
-    categoria = models.ForeignKey (to=CategoriaModel, on_delete=models.PROTECT,db_column='categoria_id')
+    categoria = models.ForeignKey (to=CategoriaModel, on_delete=models.PROTECT,db_column='categoria_id',related_name='platos')
+    #related_name=Sirve para acceder a todos los registros desde la otra entidad, es dewcir desde categoria poder acceder a todos sus platos, si es que no se define su valor sera puesto por Django con el nombre de la clase TODO EN MINUSCULAS seguido de la palabra_set 'platomodel_set'
 
     class Meta:
         db_table = 'platos'

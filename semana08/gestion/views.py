@@ -1,6 +1,6 @@
 from rest_framework.generics import ListCreateAPIView, DestroyAPIView, ListAPIView
 from .models import CategoriaModel, PlatoModel
-from .serializers import CategoriaSerializer, PlatoSerializer, CategoriaConPlatosSerializer
+from .serializers import CategoriaSerializer, CategoriaConPlatosSerializer, MostrarPlatoSerializer, CrearPlatoSerializer
 from rest_framework.response import Response
 from rest_framework.request import Request
 
@@ -25,7 +25,7 @@ class CategoriaApiView(ListCreateAPIView):
 
 class PlatoApiView (ListCreateAPIView):
     queryset = PlatoModel.objects.all()
-    serializer_class = PlatoSerializer
+    #serializer_class = PlatoSerializer --> Cuando nosotros modificamos la funcionalidad de los metodos ya no es necesario definir los atributos obligatorios (y queryset)
 
     #Definimos el def GET para no sobreusar los generics, para poner la logica que queramos
     def get (self,request:Request): #variable de la clase :Request
@@ -36,7 +36,7 @@ class PlatoApiView (ListCreateAPIView):
         resultado = PlatoModel.objects.filter(disponibilidad=True).all()
         print(resultado)
         # Aca llamamos a serializer y le pasamos la informacion proveniente de la BD y con el parametro many=True indicamos que le estamos pasando un arreglo de instancias
-        serializador = PlatoSerializer(instance = resultado, many=True)
+        serializador = MostrarPlatoSerializer(instance = resultado, many=True)
         print (serializador.data)
         return Response (data = {
             'message':serializador.data
@@ -45,7 +45,7 @@ class PlatoApiView (ListCreateAPIView):
     def post (self, request:Request):
         body = request.data #Me devuelve la info del BODY
         # Cuando queremos verificar si la informacion entrante es valida entonces utilizamos el parametro DATA en vez del paramentro instance
-        serializador = PlatoSerializer(data = body) # (parametro del serial = data que es iguak a request.data)
+        serializador = CrearPlatoSerializer(data = body) # (parametro del serial = data que es iguak a request.data)
         # Es el encargado de validar si la data es correcta y cumple con todos los requisitos
         #Instanciar, tomo toda la configuracion o copia de una clase y la uso en la variable guardada 
         valida = serializador.is_valid()
@@ -76,7 +76,7 @@ class PlatoApiView (ListCreateAPIView):
         # Asi guardamos la informacion en la base de datos utilizando el serializador save()
         nuevoPlato = serializador.save() #save() es un metodo de serializador
         print(nuevoPlato)
-        serializar = PlatoSerializer (instance=nuevoPlato) #instance es el parametro
+        serializar = MostrarPlatoSerializer (instance=nuevoPlato) #instance es el parametro
         return Response (data = {
             'message':'Plato creado exitosamente',
             #method data > Es la informacion convertida a un diccionario para que pueda ser entendida por el cliente
@@ -115,6 +115,12 @@ class ListarCategoriasApiView(ListAPIView):
             return Response(data={
                 'message':'Categoria no existe'
             })
+        #dir(instancia) -> Nos muestra todos los atributos t metodos de la clase
+        #print(dir(categoriaEncontrada))
+
+        print (categoriaEncontrada.platos.all())
+        plato = categoriaEncontrada.platos.all()[1]
+        print(plato.nombre)
         serializador = CategoriaConPlatosSerializer(instance = categoriaEncontrada)
 
         return Response(data= {
