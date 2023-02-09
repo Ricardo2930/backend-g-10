@@ -129,3 +129,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Modificar la tabla auth_user
 AUTH_USER_MODEL = 'gestion.UsuarioModel'
+
+#Sirve para modificar la configuracion de nuestro proyecto usando DRF
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':(
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    )
+}
+
+from datetime import timedelta
+# Modificar la configuracion de la libreria de las JWT
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME':timedelta(hours=1, minutes=10, seconds=5)
+}
