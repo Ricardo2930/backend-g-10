@@ -132,10 +132,11 @@ AUTH_USER_MODEL = 'gestion.UsuarioModel'
 
 #Sirve para modificar la configuracion de nuestro proyecto usando DRF
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':(
-        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
 
 from datetime import timedelta
 # Modificar la configuracion de la libreria de las JWT

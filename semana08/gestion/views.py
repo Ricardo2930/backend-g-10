@@ -3,10 +3,12 @@ from .models import CategoriaModel, PlatoModel, UsuarioModel
 from .serializers import CategoriaSerializer, CategoriaConPlatosSerializer, MostrarPlatoSerializer, CrearPlatoSerializer,RegistroUsuarioSerializer
 from rest_framework.response import Response
 from rest_framework.request import Request
+from rest_framework.permissions import IsAuthenticated
 
 #List - Listar (get)
 #Create - Crear (post)
 class CategoriaApiView(ListCreateAPIView):
+    permission_classes = [IsAuthenticated] #atributo de permiso para todos los metodos
     #al utilizar una vista generica que ya no es necesario definir el comportamiento paara cuando sea get o post
     #queryset -> El comando que utilizara para llamar a la informacion de nuestra base de datos
     #SELCT * FROM categoria:
@@ -18,10 +20,10 @@ class CategoriaApiView(ListCreateAPIView):
 
     #ya no es necesario definir los metodos get y post
     # def get(self):
-    #     pass
+    #     return Response(data={})
 
     # def post(self):
-    #     pass
+    #     return Response(data={})
 
 class PlatoApiView (ListCreateAPIView):
     queryset = PlatoModel.objects.all()
