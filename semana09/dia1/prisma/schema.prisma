@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Categoria {
-  id Int @id @default(autoincrement())
+  id     Int    @id @default(autoincrement())
   nombre String @db.VarChar(100)
 
   productos Producto[]
@@ -20,15 +20,15 @@ model Categoria {
 }
 
 model Producto {
-  id Int @id @default(autoincrement())
-  nombre String
-  precio Float? // el ? sirve para indicar que la columna puede o no puede tener valor(nulleable)
+  id       Int     @id @default(autoincrement())
+  nombre   String
+  precio   Float? // el ? sirve para indicar que la columna puede o no puede tener valor(nulleable)
   tieneIgv Boolean @map("tiene_igv")
-  sku String @unique //sku -> numero unico del producto
+  sku      String  @unique //sku -> numero unico del producto
 
   categoriaId Int @map("categoria_id")
-  
-  categoria Categoria @relation(fields: [categoriaId],references: [id])
-  
+
+  categoria Categoria @relation(fields: [categoriaId], references: [id]) //Fields para indicar que campos de ese modelo vamos a utilizar, EL[id] es el de la categoría . A fin de crear la relación en modelo producto y categoria
+
   @@map("productos")
 }
