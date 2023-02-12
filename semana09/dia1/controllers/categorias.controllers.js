@@ -34,14 +34,45 @@ export const buscarCategoriaPorId = async (req, res) => {
     const resultado = await conexion.categoria.findFirst({where:{id: +id}}) //Al agregar + adelante del id, se toma como entero porque le decimos que lo queremos sumar. Tambien se puede usar parseInt(id)
 
     if (!resultado) {
-        res.json({
+        return res.json({
             message: 'Categoria no existe'
         })
     }
 
-    res.json({
-        content: resultado,
+    // no se puede enviar dos o mas respuestas al cliente porque la conexion ya termino    
+    else {
+       return res.json({
+            content: resultado,
+        })
+    }
+    
+}
+
+export const actualizarCategoria = async(req, res) => {
+    const { id } = req.params
+    const { body } = req
+
+    //Buscar primero si la categoria existe, sino existe retornar un mensaje que no existe
+    const categoria = await conexion.categoria.findFirst({where:{id : +id}})
+    if(!categoria) {
+        return res.json({
+            message:'La categoria no existe',
+        })
+    }
+
+    const resultado = await conexion.categoria.update({
+        data:{
+            nombre: body.nombre,
+        }, 
+        where:{
+            id: +id,
+        },
     })
+
+    return res.json({
+        content : resultado,
+    })
+
 }
 
 // Asi se exporta commonJS -> JS Comun

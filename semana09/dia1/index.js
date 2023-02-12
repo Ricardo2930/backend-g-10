@@ -1,7 +1,7 @@
 //Asi se importa utilizado ECMAscript
 import express from 'express'
 import prisma from '@prisma/client'
-import {crearCategoria, listarCategorias, buscarCategoriaPorId} from './controllers/categorias.controllers.js'
+import {crearCategoria, listarCategorias, buscarCategoriaPorId, actualizarCategoria} from './controllers/categorias.controllers.js'
 
 //Importamos la libreria EXPRESS
 //Asi se importa usando commonJS -> JS Comun
@@ -31,7 +31,7 @@ servidor.get('/',(req,res)=>{
 
 // Creando las rutas con los metodos get, post
 servidor.route('/categorias').post(crearCategoria).get(listarCategorias)
-servidor.route('/categoria/:id').get(buscarCategoriaPorId)
+servidor.route('/categoria/:id').get(buscarCategoriaPorId).put(actualizarCategoria)
 
 servidor.post("/productos",(req,res) => {
     console.log(req.body);
