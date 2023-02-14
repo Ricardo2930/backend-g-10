@@ -25,6 +25,7 @@ model Producto {
   precio   Float? // el ? sirve para indicar que la columna puede o no puede tener valor(nulleable)
   tieneIgv Boolean @map("tiene_igv")
   sku      String  @unique //sku -> numero unico del producto
+  habilitado Boolean @default(true)
 
   categoriaId Int @map("categoria_id")
 

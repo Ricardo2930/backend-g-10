@@ -31,7 +31,14 @@ export const listarCategorias = async (req,res) => {
 export const buscarCategoriaPorId = async (req, res) => {
     console.log(req.params)
     const { id } = req.params
-    const resultado = await conexion.categoria.findFirst({where:{id: +id}}) //Al agregar + adelante del id, se toma como entero porque le decimos que lo queremos sumar. Tambien se puede usar parseInt(id)
+    const resultado = await conexion.categoria.findFirst({
+        where:{
+            id: +id
+        },//Al agregar + adelante del id, se toma como entero porque le decimos que lo queremos sumar. Tambien se puede usar parseInt(id)
+        include: {
+            productos:true
+        },// include -> Sirve para indicar si queremos algun modelo vecino (Productos de la CategoriaId)
+    }) 
 
     if (!resultado) {
         return res.json({
@@ -73,6 +80,23 @@ export const actualizarCategoria = async(req, res) => {
         content : resultado,
     })
 
+}
+
+export const eliminarCategoria = async (req, res) => {
+    const { id } = req.params
+
+    const categoriaEncontrada = await conexion.categoria.findFirst({where: {id: +id}})
+    if (!categoriaEncontrada) {
+        return res.json({
+            message: 'La categoria no existe'
+        })
+    }
+
+    await conexion.categoria.delete({where:{id : +id}})
+
+    return res.json({
+        message:'Categoria eliminada exitosamente',
+    })
 }
 
 // Asi se exporta commonJS -> JS Comun
